@@ -1,9 +1,112 @@
 import React from 'react';
 import Aux from "../../hoc/_Aux";
 import {Row, Card, Col, Form, Button , Table} from "react-bootstrap";
+import {GetData, PostData} from "../../services/api";
 
 class Nouveau_contrat extends React.Component {
+    componentDidMount() {
+        this.getDataGenre();
+        this.getDataPays()
+        //this.getDataStatutMat()
+    }
+    state ={
+        dataToSend:{
+            nom: "",
+            prenom: "",
+            dateNaiss: "",
+            lieuNaiss: "",
+            genre: {
+                id: -1,
+            },
+            nbreEnfants: -1,
+            pays: {
+                id: -1,
+            },
+            adresse: "",
+            email: ""
+        },
+        dataGenre:[],
+        dataPays:[]
+        //DataStatutMat:[]
+    }
+    getDataGenre(){
+        GetData('Genre-all').then((result)=>{
+            //si tt c"est bien passé
+            if(result){
+                this.setState({
+                    dataGenre : result
+                })
+            }
+        }).catch((error)=>{
 
+        })
+    }
+
+    getDataPays(){
+        GetData('Pays-all').then((result)=>{
+            //si tt c"est bien passé
+            if(result){
+                this.setState({
+                    dataPays : result
+                })
+            }
+        }).catch((error)=>{
+
+        })
+    }
+
+    /*getDataStatutMat(){
+        GetData('StatutMatrimonial-all').then((result)=>{
+            //si tt c"est bien passé
+            if(result){
+                this.setState({
+                    DataStatutMat : result
+                })
+            }
+        }).catch((error)=>{
+
+        })
+    }*/
+    sendToAPI(){
+        PostData('Employe-create' , this.state.dataToSend).then((result)=>{
+            if(result){
+                alert("Ajouté")
+            }
+            this.getDataFromAPI();
+        }).catch(error=>{
+
+        })
+    }
+
+    onChange(e){
+        let data = this.state.dataToSend;
+        data[e.target.name] = e.target.value;
+        this.setState({
+            dataToSend : data
+        })
+    }
+
+    onSelectGenre(e){
+        let data = this.state.dataToSend;
+        data.genre.id = e.target.value;
+        this.setState({
+            dataToSend : data
+        })
+    }
+    onSelectPays(e){
+        let data = this.state.dataToSend;
+        data.pays.id = e.target.value;
+        this.setState({
+            dataToSend : data
+        })
+    }
+    /*onSelectSatutMat(e){
+        let data = this.state.dataToSend;
+        data.genre.id = e.target.value;
+        this.setState({
+            dataToSend : data
+        })
+    }*/
     render() {
         return (
             <Aux>
@@ -22,32 +125,37 @@ class Nouveau_contrat extends React.Component {
 
                                     <Form.Group controlId="formBasicNom">
                                         <Form.Label>Nom</Form.Label>
-                                        <Form.Control type="password" placeholder="" />
+                                        <Form.Control type="text" name="nom" value={this.state.dataToSend.nom} onChange={(e)=>{this.onChange(e)}} placeholder="" />
                                     </Form.Group>
                                     <Form.Group controlId="formBasicPrénoms">
                                         <Form.Label>Prénoms</Form.Label>
-                                        <Form.Control type="password" placeholder="" />
+                                        <Form.Control type="text" name="prenom" value={this.state.dataToSend.prenom} onChange={(e)=>{this.onChange(e)}} placeholder="jbj" />
                                     </Form.Group>
                                     <Form.Group controlId="formBasicSexe">
                                         <Form.Label>Sexe</Form.Label>
-                                        <Form.Control as="select">
-                                            <option>Feminin</option>
-                                            <option>Masculin</option>
-                                            <option>Autre</option>
+                                        <Form.Control name="genre" value={this.state.dataToSend.genre.id} onChange={(e)=>{this.onSelectGenre(e)}} as="select">
+                                            <option value={-1} disabled={true}>Selectionnez</option>
+                                            {
+                                                this.state.dataGenre.map((item)=>{
+                                                    return(
+                                                        <option value={item.id}>{item.libelle}</option>
+                                                    )
+                                                })
+                                            }
                                             </Form.Control>
 
                                     </Form.Group>
                                     <Form.Group controlId="formBasicDatedenaiss">
                                         <Form.Label>Date de naissance</Form.Label>
-                                        <Form.Control type="Date" placeholder="dd/mm/yyyy" />
+                                        <Form.Control type="Date"  name="dateNaiss" value={this.state.dataToSend.dateNaiss} onChange={(e)=>{this.onChange(e)}} placeholder="dd/mm/yyyy" />
                                     </Form.Group>
                                     <Form.Group controlId="formBasicLieudenaiss">
                                         <Form.Label>Lieu de naissance</Form.Label>
-                                        <Form.Control type="password" placeholder="" />
+                                        <Form.Control type="text" name="lieuNaiss" value={this.state.dataToSend.lieuNaiss} onChange={(e)=>{this.onChange(e)}} placeholder="" />
                                     </Form.Group>
                                     <Form.Group controlId="formBasicDatedenaiss">
                                         <Form.Label>Nombre Enfants</Form.Label>
-                                        <Form.Control type="password" placeholder="" />
+                                        <Form.Control type="text" name="nbreEnfants" value={parseInt(this.state.dataToSend.nbreEnfants)} onChange={(e)=>{this.onChange(e)}} placeholder="" />
                                     </Form.Group>
 
                                 </Form>
@@ -55,22 +163,27 @@ class Nouveau_contrat extends React.Component {
                             <Col md={6}>
                                 <Form.Group controlId="exampleForm.Ntel">
                                     <Form.Label>N°télephone</Form.Label>
-                                    <Form.Control type="" placeholder="" />
+                                    <Form.Control type="tel" placeholder="" />
                                 </Form.Group>
                                 <Form.Group controlId="exampleForm.Email">
                                     <Form.Label>Email </Form.Label>
-                                    <Form.Control type="email" placeholder="" />
+                                    <Form.Control type="email"  name="email" value={this.state.dataToSend.email} onChange={(e)=>{this.onChange(e)}} placeholder="" />
                                 </Form.Group>
                                 <Form.Group controlId="exampleForm.adresse">
                                     <Form.Label>Adresse</Form.Label>
-                                    <Form.Control type="email" placeholder="" />
+                                    <Form.Control type="text" name="adresse" value={this.state.dataToSend.adresse} onChange={(e)=>{this.onChange(e)}} placeholder="" />
                                 </Form.Group>
                                 <Form.Group controlId="exampleForm.pays">
                                     <Form.Label>Pays</Form.Label>
-                                    <Form.Control as="select">
-                                        <option>Cote d'ivoire</option>
-                                        <option>Gabon</option>
-                                        <option>Mali</option>
+                                    <Form.Control name="pays" value={this.state.dataToSend.pays.id} onChange={(e)=>{this.onSelectPays(e)}}as="select">
+                                        <option value={-1} disabled={true}>Selectionnez</option>
+                                        {
+                                            this.state.dataPays.map((item)=>{
+                                                return(
+                                                    <option value={item.id}>{item.libelle}</option>
+                                                )
+                                            })
+                                        }
                                     </Form.Control>
                                 </Form.Group>
                                 <Form.Group controlId="exampleForm.ville">
@@ -239,7 +352,7 @@ class Nouveau_contrat extends React.Component {
                     </Card.Body>
                 </Card>
                 <div className="text-center">
-                    <Button>Valider</Button>
+                    <Button onClick={()=>this.sendToAPI()}>Valider</Button>
                 </div>
             </Aux>
         );
