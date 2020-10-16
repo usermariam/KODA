@@ -2,8 +2,33 @@ import React from 'react';
 import Aux from "../../hoc/_Aux";
 import {Row, Card, Col, Form, Button , Table} from "react-bootstrap";
 import DEMO from "../../store/constant";
+import {GetData} from "../../services/api";
 
 class Liste_contrat extends React.Component {
+
+    componentDidMount() {
+        this.getDataFromAPI();
+    }
+
+    state = {
+        dataToSend: {
+        },
+        dataToReceive: [ ]
+    }
+
+    getDataFromAPI(){
+        GetData('Employe/SignatureContrat-all').then((result)=>{
+            console.log("result : ",result)
+            if(result){
+                this.setState({
+                    dataToReceive : result
+                })
+            }
+        }).catch((error)=>{
+            console.log("error : ",error)
+        })
+    }
+
 
     render() {
         return (

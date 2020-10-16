@@ -23,7 +23,7 @@ class GestHabilitation extends React.Component {
                                         <Form.Control as="select">
                                             <option value="0" disabled={true} selected={true}>Selectionnez...</option>
                                             <option value="1    ">Administrateurs</option>
-                                            <option value="2">Responsable RH</option>
+                                            <option value="2">DRH</option>
                                             <option value="2">Assistant RH</option>
                                             <option value="3">Employé</option>
                                         </Form.Control>
