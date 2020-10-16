@@ -116,7 +116,7 @@ class GestUtilisateur extends React.Component {
                             <div className="col-md-4 col-sm-6 col-12">
                                 <Form.Group >
                                     <Form.Label>Nom d'utilisateur</Form.Label>
-                                    <Form.Control name="username" type="text" value={this.state.dataToSend.nomUser} onChange={(e)=>{this.onChange(e)}} placeholder="Nom d'utilisateur..." />
+                                    <Form.Control name="username" type="text" value={this.state.dataToSend.username} onChange={(e)=>{this.onChange(e)}} placeholder="Nom d'utilisateur..." />
                                 </Form.Group>
                             </div>
                             <div className="col-md-4 col-sm-6 col-12">

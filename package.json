@@ -6,6 +6,7 @@
   "dependencies": {
     "@react-pdf/renderer": "^1.6.11",
     "bootstrap": "^4.3.1",
+    "dependencies": "0.0.1",
     "font-awesome": "^4.7.0",
     "google-maps-react": "^2.0.2",
     "jquery": "^3.5.1",
