@@ -5,8 +5,76 @@ import avatar1 from "../../assets/images/user/avatar-1.jpg";
 import DEMO from "../../store/constant";
 import avatar2 from "../../assets/images/user/avatar-2.jpg";
 import avatar3 from "../../assets/images/user/avatar-3.jpg";
+import {GetData, PostData} from "../../services/api";
+import { confirmAlert } from 'react-confirm-alert'; // Import
+import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
 
 class GestGroupeUtil extends React.Component {
+
+    componentDidMount() {
+        this.getDataFromAPI();
+    }
+
+    state = {
+        dataToSend:{
+            libelle : ""
+        },
+        dataToReceive:[],
+    }
+
+    getDataFromAPI(){
+        GetData('Groupe-all').then((result)=>{
+            //si tt c"est bien passé
+            if(result){
+                this.setState({
+                    dataToReceive : result
+                })
+            }
+        }).catch((error)=>{
+
+        })
+    }
+
+    sendToAPI(){
+        PostData('Groupe-create' , this.state.dataToSend).then((result)=>{
+            if(result){
+                alert("Ajouté")
+            }
+            this.getDataFromAPI();
+        }).catch(error=>{
+
+        })
+    }
+    onChange(e){
+        let data = this.state.dataToSend;
+        data[e.target.name] = e.target.value;
+        this.setState({
+            dataToSend : data
+        })
+    }
+
+    suppGroupe(id , libelle){
+        confirmAlert({
+            title: 'Suppression de '+libelle,
+            message: 'Voulez-vous supprimé',
+            buttons: [
+                {
+                    label: 'Oui',
+                    onClick: () => {
+                        PostData('Groupe-delete' , {id:id}).then((result)=>{
+                        }).catch(error=>{
+                        })
+                        this.getDataFromAPI();
+                    }
+                },
+                {
+                    label: 'Non',
+                    onClick: () => {}
+                }
+            ],
+        });
+
+    }
 
     render() {
         return (
@@ -23,10 +91,10 @@ class GestGroupeUtil extends React.Component {
                                         <Form.Control plaintext readOnly defaultValue="Nom du groupe : "/>
                                     </Form.Group>
                                     <Form.Group className="mb-2 mr-5">
-                                        <Form.Control type="password" placeholder="Ex : Assistants RH"/>
+                                        <Form.Control name="libelle" type="text" value={this.state.dataToSend.libelle} onChange={(e)=>{this.onChange(e)}} placeholder="Ex : Assistants RH"/>
                                     </Form.Group>
                                     <Form.Group>
-                                        <Button onClick={() => {}}>Valider</Button>
+                                        <Button onClick={()=>this.sendToAPI()}>Valider</Button>
                                     </Form.Group>
                                 </Form>
                             </Col>
@@ -47,30 +115,24 @@ class GestGroupeUtil extends React.Component {
                             </tr>
                             </thead>
                             <tbody>
-                            <tr className="unread">
-                                <td>
-                                    ARH
-                                </td>
-                                <td>
-                                    Assistant RH
-                                </td>
-                                <td className="text-center">
-                                    <a href={DEMO.BLANK_LINK} className="label theme-bg2 text-white f-12 btn-rounded">Modifier</a>
-                                    <a href={DEMO.BLANK_LINK} className="label theme-bg text-white f-12 btn-rounded">Supprimer</a>
-                                </td>
-                            </tr>
-                            <tr className="unread">
-                                <td>
-                                    ADMIN
-                                </td>
-                                <td>
-                                    Administrateur
-                                </td>
-                                <td className="text-center">
-                                    <a href={DEMO.BLANK_LINK} className="label theme-bg2 text-white f-12 btn-rounded">Modifier</a>
-                                    <a href={DEMO.BLANK_LINK} className="label theme-bg text-white f-12 btn-rounded">Supprimer</a>
-                                </td>
-                            </tr>
+                            {
+                                this.state.dataToReceive.map((item)=>{
+                                    return (
+                                        <tr className="unread">
+                                            <td>
+                                                {item.id}
+                                            </td>
+                                            <td>
+                                                {item.libelle}
+                                            </td>
+                                            <td className="text-center">
+                                                <a href={DEMO.BLANK_LINK} className="label theme-bg2 text-white f-12 btn-rounded">Modifier</a>
+                                                <a href={DEMO.BLANK_LINK} onClick={()=>{this.suppGroupe(item.id , item.libelle)}} className="label theme-bg text-white f-12 btn-rounded">Supprimer</a>
+                                            </td>
+                                        </tr>
+                                    )
+                                })
+                            }
                             </tbody>
                         </Table>
 
