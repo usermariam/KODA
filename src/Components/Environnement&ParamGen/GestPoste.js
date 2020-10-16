@@ -6,7 +6,8 @@ import DEMO from "../../store/constant";
 import avatar2 from "../../assets/images/user/avatar-2.jpg";
 import avatar3 from "../../assets/images/user/avatar-3.jpg";
 import {GetData, PostData} from "../../services/api";
-import {confirmAlert} from "react-confirm-alert";
+import { confirmAlert } from 'react-confirm-alert'; // Import
+import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
 
 class GestPoste extends React.Component {
 
