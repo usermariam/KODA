@@ -24,7 +24,17 @@ class Connexion extends React.Component {
 
     login(){
         //alert(JSON.stringify(this.state.dataToSend))
-        this.setState({redirect:true})
+        PostData('connexion' , this.state.dataToSend).then((result)=>{
+            if(result){
+                this.setState({redirect:true})
+            }else{
+                alert("Nom d'utilisateur ou mot de passe incorrect")
+            }
+            // this.getDataFromAPI();
+        }).catch(error=>{
+            alert(error)
+        })
+
     }
 
     onChange(e){
@@ -53,7 +63,7 @@ class Connexion extends React.Component {
                                 </div>
                                 <h3 className="mb-4">Connexion</h3>
                                 <div className="input-group mb-3">
-                                    <input type="email" value="" className="form-control" name='username' value={this.state.dataToSend.username} onChange={(e)=>{this.onChange(e)}} placeholder="Nom d'utilisateur"/>
+                                    <input type="text" value="" className="form-control" name='username' value={this.state.dataToSend.username} onChange={(e)=>{this.onChange(e)}} placeholder="Nom d'utilisateur"/>
                                 </div>
                                 <div className="input-group mb-4">
                                     <input type="password" className="form-control" name='password' value={this.state.dataToSend.password} onChange={(e)=>{this.onChange(e)}} placeholder="Mot de passe"/>
