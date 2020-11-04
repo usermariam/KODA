@@ -330,7 +330,7 @@ class Nouveau_contrat extends React.Component {
                                 </Form.Group>
                                 <Form.Group controlId="exampleForm.ville">
                                     <Form.Label>Ville</Form.Label>
-                                    <Form.Control type="email" placeholder="" />
+                                    <Form.Control type="text" placeholder="" />
                                 </Form.Group>
                                 <Form.Group controlId="exampleForm.ville">
                                     <Form.Label>Statut matrimonial</Form.Label>
