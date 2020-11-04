@@ -13,11 +13,11 @@ class Liste_contrat extends React.Component {
     state = {
         dataToSend: {
         },
-        dataToReceive: [ ]
+        dataToReceive: []
     }
 
     getDataFromAPI(){
-        GetData('Employe/SignatureContrat-all').then((result)=>{
+        GetData('SignatureContrat-all').then((result)=>{
             console.log("result : ",result)
             if(result){
                 this.setState({
@@ -49,30 +49,20 @@ class Liste_contrat extends React.Component {
                             </tr>
                             </thead>
                             <tbody>
-                            <tr className="unread">
-                                <th scope="row">CI0258</th>
-                                <td>02/02/1999</td>
-                                <td>cdi</td>
-                                <td>24</td>
-                                <td className="text-center"><a href={DEMO.BLANK_LINK} className="label theme-bg2 text-white f-12 btn-rounded">Modifier</a><a href={DEMO.BLANK_LINK} className="label theme-bg text-white f-12 btn-rounded">Renouveller</a></td>
+                            {
+                                this.state.dataToReceive.map((item)=>{
+                                    return(
+                                        <tr className="unread">
+                                            <th scope="row">{item.employe.matriculeEmploye}</th>
+                                            <td>{item.dateSign}</td>
+                                            <td>{item.typeContrat.libelle}</td>
+                                            <td>{item.duree}</td>
+                                            <td className="text-center"><a href={DEMO.BLANK_LINK} className="label theme-bg2 text-white f-12 btn-rounded">Modifier</a><a href={DEMO.BLANK_LINK} className="label theme-bg text-white f-12 btn-rounded">Renouveller</a></td>
 
-                            </tr>
-                            <tr>
-                                <th scope="row">CI0258</th>
-                                <td>02/02/1999</td>
-                                <td>cdi</td>
-                                <td>24</td>
-                                <td className="text-center" ><a href={DEMO.BLANK_LINK} className="label theme-bg2 text-white f-12 btn-rounded">Modifier</a><a href={DEMO.BLANK_LINK} className="label theme-bg text-white f-12 btn-rounded btn-rounded">Renouveller</a></td>
-
-                            </tr>
-                            <tr>
-                                <th scope="row">CI0258</th>
-                                <td>02/02/1999</td>
-                                <td>cdi</td>
-                                <td>24</td>
-                                <td className="text-center"><a href={DEMO.BLANK_LINK} className="label theme-bg2 text-white f-12 btn-rounded">Modifier</a><a href={DEMO.BLANK_LINK} className="label theme-bg text-white f-12 btn-rounded btn-rounded btn-rounded">Renouveller</a></td>
-
-                            </tr>
+                                        </tr>
+                                    )
+                                })
+                            }
                             </tbody>
                         </Table>
                     </Card.Body>

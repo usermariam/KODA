@@ -124,8 +124,11 @@ class Nouveau_contrat extends React.Component {
     sendToAPI(){
         PostData('Employe-create' , this.state.dataToSend).then((result)=>{
             if(result){
+                //On récupère le matricule de l'employé créé
                 let matricule = result.matriculeEmploye;
                 alert("ok employe"+matricule)
+
+                //On passe le matricule de l'employe aux différentes apis qui en ont besoin
                 let data = this.state.sendToApiSituation;
                 data["employe"].matriculeEmploye = matricule;
                 this.setState({
@@ -142,33 +145,32 @@ class Nouveau_contrat extends React.Component {
                     sendToApiSignature : data2
                 })
 
+                //Avant d'afficher le message d'enregistrement de l'employé on vérifie que toutes les apis retournent un bon resultat
                 PostData('EmployeSituation-create' , this.state.sendToApiSituation).then((result)=>{
                     if(result.employe){
                         alert("ok situation"+result.employe)
+
+                        PostData('EmployePoste-create' , this.state.sendToApiPoste).then((result)=>{
+                            if(result.employe){
+                                alert("ok poste"+result.employe)
+
+                                PostData('SignatureContrat-create' , this.state.sendToApiSignature).then((result)=>{
+                                    if(result.employe.matriculeEmploye){
+                                        alert("ok contrat"+result.employe.matriculeEmploye)
+                                        alert("Employe enregistré avec succès")
+                                    }
+                                }).catch(error=>{
+                                    alert("Erreur signature"+error.toString())
+                                });
+
+                            }
+                        }).catch(error=>{
+                            alert("Erreur poste!!!  "+error.toString())
+                        });
                     }
                 }).catch(error=>{
                     alert("erreur situation!!!  "+error.toString())
                 });
-
-                PostData('EmployePoste-create' , this.state.sendToApiPoste).then((result)=>{
-                    if(result.employe){
-                        alert("ok poste"+result.matriculeEmploye)
-
-                    }
-                }).catch(error=>{
-                    alert("Erreur poste!!!  "+error.toString())
-                });
-
-                PostData('SignatureContrat-create' , this.state.sendToApiSignature).then((result)=>{
-                    if(result.employe.matriculeEmploye){
-                        alert("ok contrat"+result.employe.matriculeEmploye)
-                        alert("Employe enregistré avec succès")
-                    }
-                }).catch(error=>{
-                    alert("Erreur signature"+error.toString())
-                });
-
-
             }
         }).catch(error=>{
             alert("erreur employe!!!  "+error.toString())
@@ -315,7 +317,7 @@ class Nouveau_contrat extends React.Component {
                                 </Form.Group>
                                 <Form.Group controlId="exampleForm.pays">
                                     <Form.Label>Pays</Form.Label>
-                                    <Form.Control name="pays" value={this.state.dataToSend.pays.id} onChange={(e)=>{this.onSelectPays(e)}}as="select">
+                                    <Form.Control name="pays" value={this.state.dataToSend.pays.id} onChange={(e)=>{this.onSelectPays(e)}} as="select">
                                         <option value={-1} disabled={true}>Selectionnez</option>
                                         {
                                             this.state.dataPays.map((item)=>{
@@ -332,7 +334,7 @@ class Nouveau_contrat extends React.Component {
                                 </Form.Group>
                                 <Form.Group controlId="exampleForm.ville">
                                     <Form.Label>Statut matrimonial</Form.Label>
-                                    <Form.Control name="situationMatrimoniale" value={this.state.sendToApiSituation.situationMatrimoniale.id} onChange={(e)=>{this.onSelectSituation(e)}}as="select">
+                                    <Form.Control name="situationMatrimoniale" value={this.state.sendToApiSituation.situationMatrimoniale.id} onChange={(e)=>{this.onSelectSituation(e)}} as="select">
                                         <option value={-1} disabled={true}>Selectionnez</option>
                                         {
                                             this.state.dataSituation.map((item)=>{
@@ -374,7 +376,7 @@ class Nouveau_contrat extends React.Component {
                                     </Form.Group>
                                     <Form.Group controlId="formBasicPrénoms">
                                         <Form.Label>Poste</Form.Label>
-                                        <Form.Control name="poste" value={this.state.sendToApiPoste.poste.id} onChange={(e)=>{this.onSelectPoste(e)}}as="select">
+                                        <Form.Control name="poste" value={this.state.sendToApiPoste.poste.id} onChange={(e)=>{this.onSelectPoste(e)}} as="select">
                                             <option value={-1} disabled={true}>Selectionnez</option>
                                             {
                                                 this.state.dataPoste.map((item)=>{
